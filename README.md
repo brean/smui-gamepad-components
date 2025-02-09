@@ -1,1 +1,2 @@
 # Svelte Material UI Gamepad components 
+Using [Svelte Material UI](https://sveltematerialui.com/) components with [svelte-gamepad-virtual-joystick](https://github.com/brean/svelte-gamepad-virtual-joystick)
