@@ -1,29 +1,154 @@
 <script lang="ts">
   import Button from '$lib/components/Button.svelte';
-  import { Label } from '@smui/button';
-  import { VirtualJoystick, GamepadManager, KeyboardManager } from 'svelte-gamepad-virtual-joystick'
-  let position: [x: number, y: number] = [0, 0];
-  let presses = 0;
+  import { Joystick, GamepadManager, KeyboardManager, type ButtonInput } from 'svelte-gamepad-virtual-joystick';
+
+  import Drawer, {
+    AppContent,
+    Content,
+    Header,
+    Title,
+    Subtitle,
+  } from '@smui/drawer';
+  import List from '$lib/components/List.svelte'
+  import { Item, Text } from '@smui/list';
+
+  let position: [x: number, y: number] = $state([0, 0]);
+  let presses = $state(0);
+  let firstButtonMapping: ButtonInput = $state({
+    gamepad: -1,
+    gamepad_buttons: [0],
+    keyboard_keys: ['e'],
+    name: 'my button'
+  });
+  let toggleDrawerInput: ButtonInput = $state({
+    gamepad: -1,
+    gamepad_buttons: [9],
+    keyboard_keys: ['q'],
+    name: 'toggle drawer'
+  });
+
+  function controller_index(mapping: ButtonInput): string {
+    return mapping.gamepad === -1 ? 
+      'any connected controller' :
+      `The controller with id "${mapping.gamepad}"`;
+  }
+
+  let open = $state(false);
+  let active = $state('Gray Kittens');
+
+  function setActive(value: string) {
+    active = value;
+  }
 </script>
 
-<VirtualJoystick
+<div class="drawer-container">
+  <Drawer variant="dismissible" bind:open>
+    <Header>
+      <Title>Gamepad Drawer</Title>
+      <Subtitle>Press down on your gamepad / ArrowUp on your keyboard to select the next or up on your gamepad / AddowDown on your keyboard to select the next, press x on gamepad / q on keyboard to select an item.</Subtitle>
+    </Header>
+    <Content>
+      <List>
+        <Item
+          href="javascript:void(0)"
+          onclick={() => setActive('Gray Kittens')}
+          activated={active === 'Gray Kittens'}
+        >
+          <Text>Gray Kittens</Text>
+        </Item>
+        <Item
+          href="javascript:void(0)"
+          onclick={() => setActive('A Space Rocket')}
+          activated={active === 'A Space Rocket'}
+        >
+          <Text>A Space Rocket</Text>
+        </Item>
+        <Item
+          href="javascript:void(0)"
+          onclick={() => setActive('100 Pounds of Gravel')}
+          activated={active === '100 Pounds of Gravel'}
+        >
+          <Text>100 Pounds of Gravel</Text>
+        </Item>
+        <Item
+          href="javascript:void(0)"
+          onclick={() => setActive('All of the Shrimp')}
+          activated={active === 'All of the Shrimp'}
+        >
+          <Text>All of the Shrimp</Text>
+        </Item>
+        <Item
+          href="javascript:void(0)"
+          onclick={() => setActive('A Planet with a Mall')}
+          activated={active === 'A Planet with a Mall'}
+        >
+          <Text>A Planet with a Mall</Text>
+        </Item>
+      </List>
+    </Content>
+  </Drawer>
+
+  <AppContent class="app-content">
+    <main class="main-content">
+
+<div class="mdc-typography--body1">
+Press button "{toggleDrawerInput.gamepad_buttons[0]}" on {controller_index(toggleDrawerInput)}, 
+'{toggleDrawerInput.keyboard_keys[0]}' on your keyboard or 
+just click/touch to toggle the drawer.<br />
+Value from the list of the drawer: {active}.<br />
+<i>(Button 9 is OPTIONS on the DS4-controller)</i><br />
+<Button
+  input_mapping={toggleDrawerInput}
+  variant="raised"
+  onpressed={()=>{open = !open}}
+>
+    Toggle drawer<br />
+</Button>
+<br />
+Use the right thumbstick to control this virtual joystick, the keys i j k l or the mouse/touch:<br />
+<Joystick
+    input_mapping={{
+      name: 'my_joystick',
+      gamepad: -1,
+      axes_x: 2,
+      axes_y: 3,
+      key_x_pos: 'l',
+      key_x_neg: 'j',
+      key_y_pos: 'k',
+      key_y_neg: 'i',
+      deadzoneX: 0.07,
+      deadzoneY: 0.07,
+      invert_x: false,
+      invert_y: false
+    }}
     style="background-color: rgba(0, 0, 0, 0);"
     bind:position
-/>
+/><br />
+X: {position[0]}<br />
+Y: {position[1]}<br />
 
+Press button "{firstButtonMapping.gamepad_buttons[0]}" on {controller_index(firstButtonMapping)}, 
+'{firstButtonMapping.keyboard_keys[0]}' on your keyboard or 
+just click/touch to press this button:<br />
+</div>
 <Button
+  input_mapping={firstButtonMapping}
   variant="raised"
   cssclass="my_button"
   onpressed={()=>{presses++}}
 >
-    You pressed {presses} times
+    You pressed {presses} times.<br />
 </Button>
+    </main>
+  </AppContent>
+</div>
 
 <GamepadManager></GamepadManager>
 <KeyboardManager></KeyboardManager>
 
 
-<style>
+<style lang="scss">
+  @use '@material/typography/mdc-typography';
   :global {
     button.my_button {
       min-width: 150px !important;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { VirtualButtonInput } from "svelte-gamepad-virtual-joystick";
+  import type { ButtonInput } from "svelte-gamepad-virtual-joystick";
   import { ButtonBase } from "svelte-gamepad-virtual-joystick";
   import { type Snippet } from "svelte";
   import Button from "@smui/button";
@@ -16,7 +16,7 @@
     onrelease?: (() => void),
     pressed?: boolean,
     style?: string,
-    input_mapping?: VirtualButtonInput
+    input_mapping?: ButtonInput
   }
 
   let {
