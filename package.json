@@ -52,7 +52,7 @@
 		"smui-theme": "^8.0.0-beta.3",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
-		"svelte-gamepad-virtual-joystick": "^0.1.0-rc1",
+		"svelte-gamepad-virtual-joystick": "^0.1.0-rc7",
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.20.0",
 		"vite": "^6.0.0"

@@ -34,11 +34,18 @@
   }
 
   let open = $state(false);
-  let active = $state('Gray Kittens');
+  
+  const options = [
+    'Main',
+    'Second',
+    'Third',
+    'Settings',
+    'Fifth',
+  ]
 
-  function setActive(value: string) {
-    active = value;
-  }
+  let selectionIndex = $state(0);
+  let active = $state(options[0]);
+
 </script>
 
 <div class="drawer-container">
@@ -48,42 +55,19 @@
       <Subtitle>Press down on your gamepad / ArrowUp on your keyboard to select the next or up on your gamepad / AddowDown on your keyboard to select the next, press x on gamepad / q on keyboard to select an item.</Subtitle>
     </Header>
     <Content>
-      <List>
+      <List bind:selectedIndex={selectionIndex} onpressed={() => {active = options[selectionIndex]}}>
+        {#each options as item, i}
         <Item
-          href="javascript:void(0)"
-          onclick={() => setActive('Gray Kittens')}
-          activated={active === 'Gray Kittens'}
+          onSMUIAction={() => {
+            selectionIndex = i;
+          }}
+          selected={selectionIndex === i}
         >
-          <Text>Gray Kittens</Text>
+          <Text>
+            {item}
+          </Text>
         </Item>
-        <Item
-          href="javascript:void(0)"
-          onclick={() => setActive('A Space Rocket')}
-          activated={active === 'A Space Rocket'}
-        >
-          <Text>A Space Rocket</Text>
-        </Item>
-        <Item
-          href="javascript:void(0)"
-          onclick={() => setActive('100 Pounds of Gravel')}
-          activated={active === '100 Pounds of Gravel'}
-        >
-          <Text>100 Pounds of Gravel</Text>
-        </Item>
-        <Item
-          href="javascript:void(0)"
-          onclick={() => setActive('All of the Shrimp')}
-          activated={active === 'All of the Shrimp'}
-        >
-          <Text>All of the Shrimp</Text>
-        </Item>
-        <Item
-          href="javascript:void(0)"
-          onclick={() => setActive('A Planet with a Mall')}
-          activated={active === 'A Planet with a Mall'}
-        >
-          <Text>A Planet with a Mall</Text>
-        </Item>
+        {/each}
       </List>
     </Content>
   </Drawer>
@@ -95,12 +79,17 @@
 Press button "{toggleDrawerInput.gamepad_buttons[0]}" on {controller_index(toggleDrawerInput)}, 
 '{toggleDrawerInput.keyboard_keys[0]}' on your keyboard or 
 just click/touch to toggle the drawer.<br />
-Value from the list of the drawer: {active}.<br />
+
+Value from the list of the drawer: <b>{active}</b>.<br />
+
 <i>(Button 9 is OPTIONS on the DS4-controller)</i><br />
 <Button
   input_mapping={toggleDrawerInput}
   variant="raised"
-  onpressed={()=>{open = !open}}
+  onpressed={()=>{
+    open = !open;
+    return true;
+  }}
 >
     Toggle drawer<br />
 </Button>
@@ -135,7 +124,10 @@ just click/touch to press this button:<br />
   input_mapping={firstButtonMapping}
   variant="raised"
   cssclass="my_button"
-  onpressed={()=>{presses++}}
+  onpressed={()=>{
+    presses++;
+    return false;
+  }}
 >
     You pressed {presses} times.<br />
 </Button>
