@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" href="/smui-gamepad-components/favicon.png" />
+		<!-- Hint where we get fonts from. -->
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+		<!-- Roboto, and Roboto Mono fonts -->
+		<link
+			href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital@0;1&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			href="https://fonts.googleapis.com/css2?family=Material+Icons&display=swap"
+			rel="stylesheet"
+		/>
+		<link
+			rel="stylesheet"
+			href="static.css"
+		/>
+		<!-- SMUI Styles -->
+		<link
+			rel="stylesheet"
+			href="smui.css"
+			media="(prefers-color-scheme: light)"
+		/>
+		<link
+			rel="stylesheet"
+			href="smui-dark.css"
+			media="screen and (prefers-color-scheme: dark)"
+		/>
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		
+		<link rel="modulepreload" href="/smui-gamepad-components/_app/immutable/entry/start.ZDdChF3m.js">
+		<link rel="modulepreload" href="/smui-gamepad-components/_app/immutable/chunks/Ddadb9gD.js">
+		<link rel="modulepreload" href="/smui-gamepad-components/_app/immutable/chunks/DFWBhk7E.js">
+		<link rel="modulepreload" href="/smui-gamepad-components/_app/immutable/chunks/BbS_SUae.js">
+		<link rel="modulepreload" href="/smui-gamepad-components/_app/immutable/entry/app.Y6H31CSF.js">
+		<link rel="modulepreload" href="/smui-gamepad-components/_app/immutable/chunks/BTe6uVaN.js">
+		<link rel="modulepreload" href="/smui-gamepad-components/_app/immutable/chunks/B-_DxElP.js">
+		<link rel="modulepreload" href="/smui-gamepad-components/_app/immutable/chunks/DM_XfF7y.js">
+	</head>
+	<body data-sveltekit-preload-data="hover">
+		<div>
+			<script>
+				{
+					__sveltekit_1j46l2t = {
+						base: "/smui-gamepad-components",
+						assets: "/smui-gamepad-components"
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("/smui-gamepad-components/_app/immutable/entry/start.ZDdChF3m.js"),
+						import("/smui-gamepad-components/_app/immutable/entry/app.Y6H31CSF.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element);
+					});
+				}
+			</script>
+		</div>
+	</body>
+</html>
