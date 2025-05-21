@@ -52,7 +52,7 @@
   <Drawer variant="dismissible" bind:open>
     <Header>
       <Title>Gamepad Drawer</Title>
-      <Subtitle>Press down on your gamepad / ArrowUp on your keyboard to select the next or up on your gamepad / AddowDown on your keyboard to select the next, press x on gamepad / q on keyboard to select an item.</Subtitle>
+      <Subtitle><span style="font-size: 10pt">Press x on gamepad / q on keyboard to select an item.</span></Subtitle>
     </Header>
     <Content>
       <List bind:selectedIndex={selectionIndex} onpressed={() => {active = options[selectionIndex]}}>
@@ -76,11 +76,26 @@
     <main class="main-content">
 
 <div class="mdc-typography--body1">
+
+Press button "{firstButtonMapping.gamepad_buttons[0]}" on {controller_index(firstButtonMapping)}, 
+'{firstButtonMapping.keyboard_keys[0]}' on your keyboard or 
+just click/touch to press this button:<br />
+
+<Button
+  input_mapping={firstButtonMapping}
+  variant="raised"
+  cssclass="my_button"
+  onpressed={()=>{
+    presses++;
+    return false;
+  }}
+><br />
+    You pressed {presses} times.<br />
+</Button><br />
+
 Press button "{toggleDrawerInput.gamepad_buttons[0]}" on {controller_index(toggleDrawerInput)}, 
 '{toggleDrawerInput.keyboard_keys[0]}' on your keyboard or 
 just click/touch to toggle the drawer.<br />
-
-Value from the list of the drawer: <b>{active}</b>.<br />
 
 <i>(Button 9 is OPTIONS on the DS4-controller)</i><br />
 <Button
@@ -112,25 +127,14 @@ Use the right thumbstick to control this virtual joystick, the keys i j k l or t
     }}
     style="background-color: rgba(0, 0, 0, 0);"
     bind:position
-/><br />
+/>
+<div style="position: relative; left: 210px; top: -200px">
 X: {position[0]}<br />
-Y: {position[1]}<br />
-
-Press button "{firstButtonMapping.gamepad_buttons[0]}" on {controller_index(firstButtonMapping)}, 
-'{firstButtonMapping.keyboard_keys[0]}' on your keyboard or 
-just click/touch to press this button:<br />
+Y: {position[1]}
 </div>
-<Button
-  input_mapping={firstButtonMapping}
-  variant="raised"
-  cssclass="my_button"
-  onpressed={()=>{
-    presses++;
-    return false;
-  }}
->
-    You pressed {presses} times.<br />
-</Button>
+
+</div>
+
     </main>
   </AppContent>
 </div>
@@ -144,7 +148,6 @@ just click/touch to press this button:<br />
   :global {
     button.my_button {
       min-width: 150px !important;
-      min-height: 150px;
     } 
   }
 </style>
