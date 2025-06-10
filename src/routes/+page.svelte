@@ -11,6 +11,13 @@
   } from '@smui/drawer';
   import List from '$lib/components/List.svelte'
   import { Item, Text } from '@smui/list';
+  import Dialog, { Actions } from '@smui/dialog';
+  import { Label } from '@smui/button';
+  import TabBar from '@smui/tab-bar';
+  import Tab from '@smui/tab';
+  import Paper, { Content as PaperContent } from '@smui/paper';
+
+  let activeBar = $state('First');
 
   let position: [x: number, y: number] = $state([0, 0]);
   let presses = $state(0);
@@ -25,6 +32,12 @@
     gamepad_buttons: [9],
     keyboard_keys: ['q'],
     name: 'toggle drawer'
+  });
+  let cancelMapping: ButtonInput = $state({
+    gamepad: -1,
+    gamepad_buttons: [1],
+    keyboard_keys: ['q'],
+    name: 'cancel'
   });
 
   function controller_index(mapping: ButtonInput): string {
@@ -45,6 +58,7 @@
 
   let selectionIndex = $state(0);
   let active = $state(options[0]);
+  let settingsDialog = $state(false)
 
 </script>
 
@@ -55,11 +69,18 @@
       <Subtitle><span style="font-size: 10pt">Press x on gamepad / q on keyboard to select an item.</span></Subtitle>
     </Header>
     <Content>
-      <List bind:selectedIndex={selectionIndex} onpressed={() => {active = options[selectionIndex]}}>
+      <List bind:selectedIndex={selectionIndex} onpressed={() => {
+        active = options[selectionIndex];
+      }}>
         {#each options as item, i}
         <Item
           onSMUIAction={() => {
             selectionIndex = i;
+            console.log(selectionIndex);
+            if (options[selectionIndex] === 'Settings') {
+              settingsDialog = true;
+              activeBar = 'First';
+            }
           }}
           selected={selectionIndex === i}
         >
@@ -151,3 +172,34 @@ Y: {position[1]}
     } 
   }
 </style>
+
+<Dialog bind:open={settingsDialog}>
+  <Content id="simple-content">
+    <TabBar tabs={['First', 'Second', 'Third']} bind:active={activeBar}>
+    {#snippet tab(tab)}
+      <!-- Note: the `tab` property is required! -->
+      <Tab {tab}>
+        <Label>{tab}</Label>
+      </Tab>
+    {/snippet}
+  </TabBar>
+  </Content>
+    {#if active === 'First'}
+        <Paper role="tabpanel" variant="unelevated">
+          <PaperContent>Welcome to First! Press R1 to go to Second.</PaperContent>
+        </Paper>
+    {:else if active === 'Second'}
+        <Paper role="tabpanel" variant="unelevated">
+          <PaperContent>Welcome to second!</PaperContent>
+        </Paper>
+        {:else if active === 'Third'}
+        <Paper role="tabpanel" variant="unelevated">
+          <PaperContent>Welcome to third!</PaperContent>
+        </Paper>
+    {/if}
+    <Actions>
+      <Button input_mapping={cancelMapping} variant="outlined">
+        <Label>quit</Label>
+      </Button>
+    </Actions>
+</Dialog>
