@@ -5,12 +5,12 @@
     ListInputComponent,
     registerComponent, unregisterComponent,
     focusNextElement,
-
     component_state
-
   } from "svelte-gamepad-virtual-joystick";
   import { onMount, type Snippet } from "svelte";
   import List from "@smui/list";
+
+  let wrapper:HTMLElement;
 
   interface Props {
     children?: Snippet
@@ -55,13 +55,18 @@
 
   let lst:List;
 
+  export function focusDrawer() {
+    if (!wrapper || !lst) return;
+    lst.getElement().focus();
+    wrapper.focus();
+  }
+
   const getListChildren = () => {
     // FIXME: filter out all non-SMUI-Elements
     return lst.getElement().children
   }
 
   const _changeFocus = (direction: 1 | -1) => {
-    console.log('change focus', direction)
     const focussed = lst.getFocusedItemIndex();
     let next = focussed+direction;
     if (wrapFocus && next < 0) {
@@ -83,9 +88,8 @@
   }
   let lstInputComponent: ListInputComponent;
   onMount(() => {
-    const elem = lst.getElement();
     lstInputComponent = new ListInputComponent(
-      inputMapping, elem, requiresFocus,
+      inputMapping, lst.getElement(), requiresFocus,
       _onpressed);
     lstInputComponent.changeFocus = _changeFocus;
     registerComponent(context, lstInputComponent);
@@ -96,6 +100,7 @@
 </script>
 
 <div 
+  bind:this={wrapper}
   class="gamepad-list-wrapper"
   onfocusin={() => {
     component_state.activeComponents.push(lstInputComponent);

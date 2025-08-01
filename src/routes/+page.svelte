@@ -59,7 +59,7 @@
   let selectionIndex = $state(0);
   let active = $state(options[0]);
   let settingsDialog = $state(false)
-
+  let navList: List;
 </script>
 
 <div class="drawer-container">
@@ -69,10 +69,14 @@
       <Subtitle><span style="font-size: 10pt">Press x on gamepad / q on keyboard to select an item.</span></Subtitle>
     </Header>
     <Content>
-      <List bind:selectedIndex={selectionIndex} onpressed={() => {
-        active = options[selectionIndex];
-        return false;
-      }}>
+      <List 
+        bind:selectedIndex={selectionIndex}
+        onpressed={() => {
+          active = options[selectionIndex];
+          return false;
+        }}
+        bind:this={navList}
+      >
         {#each options as item, i}
         <Item
           onSMUIAction={() => {
@@ -130,6 +134,9 @@ just click/touch to toggle the drawer.<br />
   variant="raised"
   onpressed={() => {
     open = !open;
+    if (open && navList) {
+      navList.focusDrawer();
+    }
     return false;
   }}
 >
