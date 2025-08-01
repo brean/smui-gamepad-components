@@ -4,7 +4,10 @@
     type ListInput,
     ListInputComponent,
     registerComponent, unregisterComponent,
-    focusNextElement
+    focusNextElement,
+
+    component_state
+
   } from "svelte-gamepad-virtual-joystick";
   import { onMount, type Snippet } from "svelte";
   import List from "@smui/list";
@@ -78,12 +81,12 @@
     }
     return true;
   }
-
+  let lstInputComponent: ListInputComponent;
   onMount(() => {
-    const lstInputComponent = new ListInputComponent(
-      inputMapping, lst.getElement(), requiresFocus,
+    const elem = lst.getElement();
+    lstInputComponent = new ListInputComponent(
+      inputMapping, elem, requiresFocus,
       _onpressed);
-
     lstInputComponent.changeFocus = _changeFocus;
     registerComponent(context, lstInputComponent);
     return () => {
@@ -92,14 +95,30 @@
   });
 </script>
 
+<div 
+  class="gamepad-list-wrapper"
+  onfocusin={() => {
+    component_state.activeComponents.push(lstInputComponent);
+  }}
+  onfocusout={() => {
+    console.log("blur")
+      if (component_state.activeComponents.includes(lstInputComponent)) {
+        component_state.activeComponents.splice(
+          component_state.activeComponents.indexOf(lstInputComponent), 1)
+      }
+  }}
+>
 <List 
-    {twoLine}
-    {style}
-    {wrapFocus}
-    {selectedIndex}
-    class={cssclass}
-    singleSelection
-    bind:this={lst}
+  tabindex={0}
+  role="listbox" 
+  {twoLine}
+  {style}
+  {wrapFocus}
+  {selectedIndex}
+  class={cssclass}
+  singleSelection
+  bind:this={lst}
   >
   {@render children?.()}
 </List>
+</div>

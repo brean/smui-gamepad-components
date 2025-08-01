@@ -77,7 +77,6 @@
         <Item
           onSMUIAction={() => {
             selectionIndex = i;
-            console.log(selectionIndex);
             if (options[selectionIndex] === 'Settings') {
               settingsDialog = true;
               activeBar = 'First';
