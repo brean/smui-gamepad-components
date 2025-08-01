@@ -65,13 +65,12 @@
 
   class SMUIButtonInputElement extends ButtonInputComponent {
     onpressed(): boolean {
-      const parentPressed = super.onpressed();
       ripple = true;
-      if (!btn) return parentPressed;
+      if (!btn) return false;
       btn.getElement().focus();
       // this click executes onpressed
       btn.getElement().click();
-      return parentPressed;
+      return false;
     }
 
     onrelease(): void {

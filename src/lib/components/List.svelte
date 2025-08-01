@@ -27,7 +27,7 @@
   let {
     children = undefined,
     twoLine = false,
-    onpressed = () => {return true;},
+    onpressed = undefined,
     disabled = false,
     wrapFocus = true,
     style = '',
@@ -42,8 +42,8 @@
       buttons: [GamepadButtons.DOWN],
       buttons_prev: [GamepadButtons.DPAD_UP],
       buttons_next: [GamepadButtons.DPAD_DOWN],
-      keys_prev: ['arrowup', 'w'],
-      keys_next: ['arrowdown', 's'],
+      keys_prev: ['w'],
+      keys_next: ['s'],
       keys: ['enter', 'r']  // activate
     },
     context=['default'],
@@ -58,6 +58,7 @@
   }
 
   const _changeFocus = (direction: 1 | -1) => {
+    console.log('change focus', direction)
     const focussed = lst.getFocusedItemIndex();
     let next = focussed+direction;
     if (wrapFocus && next < 0) {
@@ -75,12 +76,13 @@
     if (onpressed) {
       onpressed();
     }
+    return true;
   }
 
   onMount(() => {
     const lstInputComponent = new ListInputComponent(
       inputMapping, lst.getElement(), requiresFocus,
-      onpressed);
+      _onpressed);
 
     lstInputComponent.changeFocus = _changeFocus;
     registerComponent(context, lstInputComponent);

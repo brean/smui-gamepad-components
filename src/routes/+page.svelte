@@ -1,6 +1,6 @@
 <script lang="ts">
   import Button from '$lib/components/Button.svelte';
-  import { Joystick, InputManager, type ButtonInput, GamepadButtons } from 'svelte-gamepad-virtual-joystick';
+  import { Joystick, InputManager, type ButtonInput, GamepadButtons, Icon } from 'svelte-gamepad-virtual-joystick';
 
   import Drawer, {
     AppContent,
@@ -99,8 +99,11 @@
 
 <div class="mdc-typography--body1">
 
-Press button "{firstButtonMapping.buttons[0]}" on {controller_index(firstButtonMapping)}, 
-'{firstButtonMapping.keys[0]}' on your keyboard or 
+Press <Icon type='generic'
+            input={firstButtonMapping.buttons[0]} />
+on {controller_index(firstButtonMapping)},
+<Icon type='keyboard_mouse'
+      input={firstButtonMapping.keys[0]} /> or
 just click/touch to press this button:<br />
 
 <Button
@@ -115,11 +118,14 @@ just click/touch to press this button:<br />
     You pressed {presses} times.<br />
 </Button><br />
 
-Press button "{toggleDrawerInput.buttons[0]}" on {controller_index(toggleDrawerInput)}, 
-'{toggleDrawerInput.keys[0]}' on your keyboard or 
+Press <Icon type='ps4'
+            input={toggleDrawerInput.buttons[0]} />
+on {controller_index(toggleDrawerInput)},
+<Icon type='keyboard_mouse'
+      input={toggleDrawerInput.keys[0]} /> or
 just click/touch to toggle the drawer.<br />
 
-<i>(Button 9 is OPTIONS on the DS4-controller)</i><br />
+<br />
 <Button
   inputMapping={toggleDrawerInput}
   variant="raised"
@@ -131,7 +137,11 @@ just click/touch to toggle the drawer.<br />
     Toggle drawer<br />
 </Button>
 <br />
-Use the right thumbstick to control this virtual joystick, the keys i j k l or the mouse/touch:<br />
+Use the right thumbstick to control this virtual joystick, the keys 
+<Icon type='keyboard_mouse' input={'i'} />
+<Icon type='keyboard_mouse' input={'j'} />
+<Icon type='keyboard_mouse' input={'k'} />
+<Icon type='keyboard_mouse' input={'l'} /> or the mouse/touch:<br />
 <Joystick
     inputMapping={{
       name: 'my_joystick',
