@@ -1,45 +1,53 @@
 <script lang="ts">
-  import { ListBase, type ListInput } from "svelte-gamepad-virtual-joystick";
-  import { setContext, type Snippet } from "svelte";
-  import List, { type SMUIListItemAccessor } from "@smui/list";
+  import { 
+    GamepadButtons,
+    type ListInput,
+    ListInputComponent,
+    registerComponent, unregisterComponent,
+    focusNextElement
+  } from "svelte-gamepad-virtual-joystick";
+  import { onMount, type Snippet } from "svelte";
+  import List from "@smui/list";
 
   interface Props {
     children?: Snippet
     twoLine?: boolean
-    onpressed?: () => void
+    onpressed?: () => boolean
     disabled?: boolean
     wrapFocus?: boolean  // prev of first is last, next of last is first.
     style?: string
     cssclass?: string
     focussed?: number
     selectedIndex?: number
-    input_mapping?: ListInput
+    inputMapping?: ListInput
+    context?: string[]
+    requiresFocus?: boolean
   }
 
   let {
     children = undefined,
     twoLine = false,
-    onpressed = () => {},
+    onpressed = () => {return true;},
     disabled = false,
     wrapFocus = true,
     style = '',
     cssclass = 'vlist',
     selectedIndex = $bindable(0),
     focussed = $bindable(0),
-    input_mapping = {
+    inputMapping = {
       name: 'List',
       gamepad: -1,
-      gamepad_axes: [1],
-      gamepad_axes_sens: 0.05, // sensitivity - at what value do we react to the axes movement?
-      gamepad_buttons: [0],
-      gamepad_prev_buttons: [12],  // up
-      gamepad_next_buttons: [13],  // down
-      // we do NOT use ArrowUp/ArrowDown as those are already implemented by
-      // SMUI itself
-      keyboard_prev_keys: ['w'],
-      keyboard_next_keys: ['s'],
-      keyboard_keys: ['e']
-    }
+      axes: [1],
+      sensitivity: 0.05, // sensitivity - at what value do we react to the axes movement?
+      buttons: [GamepadButtons.DOWN],
+      buttons_prev: [GamepadButtons.DPAD_UP],
+      buttons_next: [GamepadButtons.DPAD_DOWN],
+      keys_prev: ['arrowup', 'w'],
+      keys_next: ['arrowdown', 's'],
+      keys: ['enter', 'r']  // activate
+    },
+    context=['default'],
+    requiresFocus=true
   }: Props = $props();
 
   let lst:List;
@@ -49,7 +57,7 @@
     return lst.getElement().children
   }
 
-  const changeFocus = (direction: 1 | -1) => {
+  const _changeFocus = (direction: 1 | -1) => {
     const focussed = lst.getFocusedItemIndex();
     let next = focussed+direction;
     if (wrapFocus && next < 0) {
@@ -68,14 +76,20 @@
       onpressed();
     }
   }
+
+  onMount(() => {
+    const lstInputComponent = new ListInputComponent(
+      inputMapping, lst.getElement(), requiresFocus,
+      onpressed);
+
+    lstInputComponent.changeFocus = _changeFocus;
+    registerComponent(context, lstInputComponent);
+    return () => {
+      unregisterComponent(context, lstInputComponent);
+    }
+  });
 </script>
 
-<ListBase
-  {changeFocus}
-  onpressed={_onpressed}
-  {disabled}
-  {input_mapping}
-></ListBase>
 <List 
     {twoLine}
     {style}

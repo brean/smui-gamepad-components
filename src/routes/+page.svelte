@@ -1,6 +1,6 @@
 <script lang="ts">
   import Button from '$lib/components/Button.svelte';
-  import { Joystick, GamepadManager, KeyboardManager, type ButtonInput } from 'svelte-gamepad-virtual-joystick';
+  import { Joystick, InputManager, type ButtonInput, GamepadButtons } from 'svelte-gamepad-virtual-joystick';
 
   import Drawer, {
     AppContent,
@@ -23,20 +23,20 @@
   let presses = $state(0);
   let firstButtonMapping: ButtonInput = $state({
     gamepad: -1,
-    gamepad_buttons: [0],
-    keyboard_keys: ['e'],
+    buttons: [GamepadButtons.DOWN],
+    keys: ['e'],
     name: 'my button'
   });
   let toggleDrawerInput: ButtonInput = $state({
     gamepad: -1,
-    gamepad_buttons: [9],
-    keyboard_keys: ['q'],
+    buttons: [GamepadButtons.VIEW],
+    keys: ['q'],
     name: 'toggle drawer'
   });
   let cancelMapping: ButtonInput = $state({
     gamepad: -1,
-    gamepad_buttons: [1],
-    keyboard_keys: ['q'],
+    buttons: [GamepadButtons.RIGHT],
+    keys: ['q'],
     name: 'cancel'
   });
 
@@ -71,6 +71,7 @@
     <Content>
       <List bind:selectedIndex={selectionIndex} onpressed={() => {
         active = options[selectionIndex];
+        return false;
       }}>
         {#each options as item, i}
         <Item
@@ -98,12 +99,12 @@
 
 <div class="mdc-typography--body1">
 
-Press button "{firstButtonMapping.gamepad_buttons[0]}" on {controller_index(firstButtonMapping)}, 
-'{firstButtonMapping.keyboard_keys[0]}' on your keyboard or 
+Press button "{firstButtonMapping.buttons[0]}" on {controller_index(firstButtonMapping)}, 
+'{firstButtonMapping.keys[0]}' on your keyboard or 
 just click/touch to press this button:<br />
 
 <Button
-  input_mapping={firstButtonMapping}
+  inputMapping={firstButtonMapping}
   variant="raised"
   cssclass="my_button"
   onpressed={()=>{
@@ -114,17 +115,17 @@ just click/touch to press this button:<br />
     You pressed {presses} times.<br />
 </Button><br />
 
-Press button "{toggleDrawerInput.gamepad_buttons[0]}" on {controller_index(toggleDrawerInput)}, 
-'{toggleDrawerInput.keyboard_keys[0]}' on your keyboard or 
+Press button "{toggleDrawerInput.buttons[0]}" on {controller_index(toggleDrawerInput)}, 
+'{toggleDrawerInput.keys[0]}' on your keyboard or 
 just click/touch to toggle the drawer.<br />
 
 <i>(Button 9 is OPTIONS on the DS4-controller)</i><br />
 <Button
-  input_mapping={toggleDrawerInput}
+  inputMapping={toggleDrawerInput}
   variant="raised"
-  onpressed={()=>{
+  onpressed={() => {
     open = !open;
-    return true;
+    return false;
   }}
 >
     Toggle drawer<br />
@@ -132,15 +133,19 @@ just click/touch to toggle the drawer.<br />
 <br />
 Use the right thumbstick to control this virtual joystick, the keys i j k l or the mouse/touch:<br />
 <Joystick
-    input_mapping={{
+    inputMapping={{
       name: 'my_joystick',
       gamepad: -1,
       axes_x: 2,
       axes_y: 3,
-      key_x_pos: 'l',
-      key_x_neg: 'j',
-      key_y_pos: 'k',
-      key_y_neg: 'i',
+      key_x_pos: ['l'],
+      key_x_neg: ['j'],
+      key_y_pos: ['k'],
+      key_y_neg: ['i'],
+      button_x_pos: [GamepadButtons.DPAD_RIGHT], 
+      button_x_neg: [GamepadButtons.DPAD_LEFT],
+      button_y_pos: [GamepadButtons.DPAD_DOWN], 
+      button_y_neg: [GamepadButtons.DPAD_UP],
       deadzoneX: 0.07,
       deadzoneY: 0.07,
       invert_x: false,
@@ -160,8 +165,7 @@ Y: {position[1]}
   </AppContent>
 </div>
 
-<GamepadManager></GamepadManager>
-<KeyboardManager></KeyboardManager>
+<InputManager />
 
 
 <style lang="scss">
@@ -198,7 +202,7 @@ Y: {position[1]}
         </Paper>
     {/if}
     <Actions>
-      <Button input_mapping={cancelMapping} variant="outlined">
+      <Button inputMapping={cancelMapping} variant="outlined">
         <Label>quit</Label>
       </Button>
     </Actions>
