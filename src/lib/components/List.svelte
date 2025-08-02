@@ -7,7 +7,7 @@
     focusNextElement,
     component_state
   } from "svelte-gamepad-virtual-joystick";
-  import { onMount, type Snippet } from "svelte";
+  import { onMount, tick, type Snippet } from "svelte";
   import List from "@smui/list";
 
   let wrapper:HTMLElement;
@@ -16,6 +16,8 @@
     children?: Snippet
     twoLine?: boolean
     onpressed?: () => boolean
+    onhold?: () => void
+    onrelease?: () => void
     disabled?: boolean
     wrapFocus?: boolean  // prev of first is last, next of last is first.
     style?: string
@@ -25,12 +27,15 @@
     inputMapping?: ListInput
     context?: string[]
     requiresFocus?: boolean
+    consumePress?: boolean
   }
 
   let {
     children = undefined,
     twoLine = false,
     onpressed = undefined,
+    onhold = undefined,
+    onrelease = undefined,
     disabled = false,
     wrapFocus = true,
     style = '',
@@ -50,15 +55,16 @@
       keys: ['enter', 'r']  // activate
     },
     context=['default'],
-    requiresFocus=true
+    requiresFocus=true,
+    consumePress=false
   }: Props = $props();
 
   let lst:List;
 
-  export function focusDrawer() {
-    if (!wrapper || !lst) return;
-    lst.getElement().focus();
-    wrapper.focus();
+  export function focus() {
+    tick().then(() => {
+      lst.getElement().focus();
+    });
   }
 
   const getListChildren = () => {
@@ -89,9 +95,9 @@
   let lstInputComponent: ListInputComponent;
   onMount(() => {
     lstInputComponent = new ListInputComponent(
-      inputMapping, lst.getElement(), requiresFocus,
-      _onpressed);
-    lstInputComponent.changeFocus = _changeFocus;
+      inputMapping, _changeFocus,
+      lst.getElement(), requiresFocus, 
+      _onpressed, onhold, onrelease, consumePress);
     registerComponent(context, lstInputComponent);
     return () => {
       unregisterComponent(context, lstInputComponent);
@@ -106,11 +112,10 @@
     component_state.activeComponents.push(lstInputComponent);
   }}
   onfocusout={() => {
-    console.log("blur")
-      if (component_state.activeComponents.includes(lstInputComponent)) {
-        component_state.activeComponents.splice(
-          component_state.activeComponents.indexOf(lstInputComponent), 1)
-      }
+    if (component_state.activeComponents.includes(lstInputComponent)) {
+      component_state.activeComponents.splice(
+        component_state.activeComponents.indexOf(lstInputComponent), 1)
+    }
   }}
 >
 <List 
