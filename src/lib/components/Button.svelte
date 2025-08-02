@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { fade } from "svelte/transition";
   import { 
     type ButtonInput,
     ButtonInputComponent,
-    Icon, GamepadButtons,
-    registerComponent, unregisterComponent
+    GamepadButtons,
+    registerComponent, unregisterComponent,
+    Hint
+
   } from "svelte-gamepad-virtual-joystick";
 
   import { onMount, type Snippet } from "svelte";
@@ -14,14 +15,15 @@
   interface Props {
     children?: Snippet
     disabled?: boolean
-    onpressed?: (() => boolean),
-    onhold?: (() => void),
-    onrelease?: (() => void),
-    onpointerout?: (() => void),
+    onpressed?: () => void,
+    onhold?: () => void,
+    onrelease?: () => void,
+    onpointerout?: () => void,
     style?: string,
     cssclass?: string
     color?: 'primary' | 'secondary'
     variant?: 'text' | 'raised' | 'unelevated' | 'outlined'
+    cssclassWrapper?: string,
     inputMapping?: ButtonInput
     context?: string[]
     requiresFocus?: boolean
@@ -45,6 +47,7 @@
       buttons: [GamepadButtons.DOWN],
       keys: ['e', ' ']
     },
+    cssclassWrapper = 'button-wrapper',
     context = ['default'],
     // button is one of the few elements that can be activated globally by
     // default while other UI-components like Slider, List or Joystick
@@ -91,7 +94,7 @@
   });
 </script>
 
-
+<div class={cssclassWrapper}>
 <Button bind:this={btn} 
   {variant}
   {style}
@@ -113,4 +116,34 @@
   ]}
   >
   {@render children?.()}
+
 </Button>
+  <Hint
+    {context}
+    keys={inputMapping.keys}
+    buttons={inputMapping.buttons}
+    style={'left: 50%;'}
+    />
+
+</div>
+
+<style>
+  .button-wrapper {
+    position: relative;
+    display: inline-block; /* Or 'block', depending on your layout */
+  }
+
+  .button-text {
+    position: relative;
+    z-index: 2;
+  }
+
+  .hint-container {
+    top: 100%;
+    left: 50%;
+  }
+
+  .hint {
+    top: 20px;
+  }
+</style>

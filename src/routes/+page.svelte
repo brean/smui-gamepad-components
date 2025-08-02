@@ -1,6 +1,16 @@
 <script lang="ts">
   import Button from '$lib/components/Button.svelte';
-  import { Joystick, InputManager, type ButtonInput, GamepadButtons, Icon, type ListInput } from 'svelte-gamepad-virtual-joystick';
+  import { Label as ButtonLabel } from '@smui/button';
+  import { 
+    type ButtonInput, 
+    type PrevNextInput, 
+    GamepadButtons, 
+    InputManager, 
+    Icon as GamepadIcon, 
+    VirtualButton, 
+    Joystick, 
+    component_state, 
+    Icon} from 'svelte-gamepad-virtual-joystick';
 
   import Drawer, {
     AppContent,
@@ -11,17 +21,23 @@
   } from '@smui/drawer';
   import List from '$lib/components/List.svelte'
   import { Item, Text } from '@smui/list';
+  import Snackbar, { Label as SnackbarLabel } from  '@smui/snackbar';
   import Dialog, { Actions } from '@smui/dialog';
-  import { Label } from '@smui/button';
-  import TabBar from '@smui/tab-bar';
-  import Tab from '@smui/tab';
+  import TabBar from '$lib/components/TabBar.svelte';
+  import Tab, { Label as TabLabel } from '@smui/tab';
   import Paper, { Content as PaperContent } from '@smui/paper';
-  import { tick } from 'svelte';
+  import { onMount } from 'svelte';
 
   let activeBar = $state('First');
 
   let position: [x: number, y: number] = $state([0, 0]);
   let presses = $state(0);
+  const hintMapping = {
+    name: 'Hint',
+    gamepad: -1,
+    buttons: [GamepadButtons.VIEW],
+    keys: ['h']
+  }
   let firstButtonMapping: ButtonInput = $state({
     gamepad: -1,
     buttons: [GamepadButtons.UP],
@@ -30,7 +46,7 @@
   });
   let toggleDrawerInput: ButtonInput = $state({
     gamepad: -1,
-    buttons: [GamepadButtons.VIEW],
+    buttons: [GamepadButtons.OPTIONS],
     keys: ['q'],
     name: 'toggle drawer'
   });
@@ -40,7 +56,7 @@
     keys: ['q'],
     name: 'cancel'
   });
-  let drawerMapping: ListInput = $state({
+  let drawerMapping: PrevNextInput = $state({
     name: 'List',
     gamepad: -1,
     axes: [1],
@@ -89,20 +105,34 @@
 
   let selectionIndex = $state(0);
   let active = $state(options[0]);
-  let settingsDialog = $state(false)
+  let settingsDialog = $state(false);
   let navList: List;
+  let hintInfo: Snackbar;
+
+  onMount(() => {
+    hintInfo.open();
+  });
 </script>
+
+<VirtualButton
+  context={['default']}
+  onpressed={() => {
+    // show all hints
+    component_state.showHints = !component_state.showHints;
+  }}
+  inputMapping={hintMapping}
+></VirtualButton>
 
 <div class="drawer-container">
   <Drawer variant="dismissible" bind:open>
     <Header>
       <Title>Gamepad Drawer</Title>
       <Subtitle><span style="font-size: 10pt">
-        Press <Icon 
+        Press <GamepadIcon 
           type='generic'
           input={drawerMapping.buttons[0]} />
         on gamepad or<br />
-        <Icon 
+        <GamepadIcon 
           type='keyboard_mouse'
           input={drawerMapping.keys[0]} />
         on keyboard to select.</span></Subtitle>
@@ -148,25 +178,25 @@
 
 Use 
 {#if [0, 1].includes(joystickMapping.axes_x) && [0, 1].includes(joystickMapping.axes_y) }
-<Icon 
+<GamepadIcon 
     type='generic'
     input={'axis_left'}
-    ></Icon>
+    ></GamepadIcon>
 {:else if [2, 3].includes(joystickMapping.axes_x) && [2, 3].includes(joystickMapping.axes_y) }
-<Icon 
+<GamepadIcon 
     type='generic'
-    input={'axis_right'}></Icon>
+    input={'axis_right'}></GamepadIcon>
 {/if}
 or the buttons
-<Icon type='generic' input={joystickMapping.button_x_neg[0]} />
-<Icon type='generic' input={joystickMapping.button_x_pos[0]} />
-<Icon type='generic' input={joystickMapping.button_y_neg[0]} />
-<Icon type='generic' input={joystickMapping.button_y_pos[0]} />
+<GamepadIcon type='generic' input={joystickMapping.button_x_neg[0]} />
+<GamepadIcon type='generic' input={joystickMapping.button_x_pos[0]} />
+<GamepadIcon type='generic' input={joystickMapping.button_y_neg[0]} />
+<GamepadIcon type='generic' input={joystickMapping.button_y_pos[0]} />
 and the keys 
-<Icon type='keyboard_mouse' input={joystickMapping.key_x_neg[0]} />
-<Icon type='keyboard_mouse' input={joystickMapping.key_y_neg[0]} />
-<Icon type='keyboard_mouse' input={joystickMapping.key_x_pos[0]} />
-<Icon type='keyboard_mouse' input={joystickMapping.key_y_pos[0]} /> or the mouse/touch:<br />
+<GamepadIcon type='keyboard_mouse' input={joystickMapping.key_x_neg[0]} />
+<GamepadIcon type='keyboard_mouse' input={joystickMapping.key_y_neg[0]} />
+<GamepadIcon type='keyboard_mouse' input={joystickMapping.key_x_pos[0]} />
+<GamepadIcon type='keyboard_mouse' input={joystickMapping.key_y_pos[0]} /> or the mouse/touch:<br />
 <Joystick
     inputMapping={joystickMapping}
     style="background-color: rgba(0, 0, 0, 0);"
@@ -178,11 +208,11 @@ Y: {position[1]}
 </div>
 
 Press
-<Icon 
+<GamepadIcon 
   type='generic'
   input={firstButtonMapping.buttons[0]} />
 on {controller_index(firstButtonMapping)},
-<Icon
+<GamepadIcon
   type='keyboard_mouse'
   input={firstButtonMapping.keys[0]} /> or
 just click/touch to press this button:<br />
@@ -199,10 +229,10 @@ just click/touch to press this button:<br />
     You pressed {presses} time{presses !== 1 ? 's' : ''}.<br />
 </Button><br />
 
-Press <Icon type='ps4'
+Press <GamepadIcon type='ps4'
             input={toggleDrawerInput.buttons[0]} />
 on {controller_index(toggleDrawerInput)},
-<Icon type='keyboard_mouse'
+<GamepadIcon type='keyboard_mouse'
       input={toggleDrawerInput.keys[0]} /> or
 just click/touch this button to toggle the drawer.<br />
 
@@ -242,31 +272,46 @@ just click/touch this button to toggle the drawer.<br />
 
 <Dialog bind:open={settingsDialog}>
   <Content id="simple-content">
-    <TabBar tabs={['First', 'Second', 'Third']} bind:active={activeBar}>
-    {#snippet tab(tab)}
-      <!-- Note: the `tab` property is required! -->
-      <Tab {tab}>
-        <Label>{tab}</Label>
-      </Tab>
-    {/snippet}
-  </TabBar>
-  </Content>
-    {#if active === 'First'}
+    <div style="min-height: 120px">
+      <TabBar tabs={['First', 'Second', 'Third']} bind:active={activeBar}>
+        {#snippet tab(tab: any)}
+          <Tab {tab}>
+            <TabLabel>{tab}</TabLabel>
+          </Tab>
+        {/snippet}
+      </TabBar>
+    
+      {#if activeBar === 'First'}
         <Paper role="tabpanel" variant="unelevated">
-          <PaperContent>Welcome to First! Press R1 to go to Second.</PaperContent>
+          <PaperContent>Welcome to First! Press <Icon type='generic' input={GamepadButtons.BUMPER_RIGHT}></Icon> to go to Second.</PaperContent>
         </Paper>
-    {:else if active === 'Second'}
+      {:else if activeBar === 'Second'}
         <Paper role="tabpanel" variant="unelevated">
           <PaperContent>Welcome to second!</PaperContent>
         </Paper>
-        {:else if active === 'Third'}
+      {:else if activeBar === 'Third'}
         <Paper role="tabpanel" variant="unelevated">
           <PaperContent>Welcome to third!</PaperContent>
         </Paper>
-    {/if}
+      {/if}
+    </div>
+  </Content>
     <Actions>
       <Button inputMapping={cancelMapping} variant="outlined">
-        <Label>quit</Label>
+        <ButtonLabel>quit</ButtonLabel>
       </Button>
     </Actions>
 </Dialog>
+
+<Snackbar bind:this={hintInfo}>
+  <SnackbarLabel>
+    <GamepadIcon 
+      type="keyboard_mouse" 
+      input={hintMapping.keys[0]}></GamepadIcon>
+    or 
+    <GamepadIcon
+      type="ps4"
+      input={hintMapping.buttons[0]}></GamepadIcon>
+    toggle help.
+  </SnackbarLabel>
+</Snackbar>

@@ -1,11 +1,11 @@
 <script lang="ts">
   import { 
     GamepadButtons,
-    type ListInput,
-    ListInputComponent,
+    type PrevNextInput,
+    PrevNextInputComponent,
     registerComponent, unregisterComponent,
-    focusNextElement,
-    component_state
+    component_state,
+    Hint
   } from "svelte-gamepad-virtual-joystick";
   import { onMount, tick, type Snippet } from "svelte";
   import List from "@smui/list";
@@ -24,7 +24,7 @@
     cssclass?: string
     focussed?: number
     selectedIndex?: number
-    inputMapping?: ListInput
+    inputMapping?: PrevNextInput
     context?: string[]
     requiresFocus?: boolean
     consumePress?: boolean
@@ -92,9 +92,9 @@
     }
     return true;
   }
-  let lstInputComponent: ListInputComponent;
+  let lstInputComponent: PrevNextInputComponent;
   onMount(() => {
-    lstInputComponent = new ListInputComponent(
+    lstInputComponent = new PrevNextInputComponent(
       inputMapping, _changeFocus,
       lst.getElement(), requiresFocus, 
       _onpressed, onhold, onrelease, consumePress);
@@ -118,6 +118,21 @@
     }
   }}
 >
+
+<Hint
+  text="↑" {context}
+  keys={inputMapping.keys_prev}
+  buttons={inputMapping.buttons_prev}
+  style={'left: 50%;'}
+  />
+
+<Hint 
+  {context}
+  keys={inputMapping.keys}
+  buttons={inputMapping.buttons}
+  style={'left: 50%; top: 25%'}
+  />
+
 <List 
   tabindex={0}
   role="listbox" 
@@ -131,4 +146,11 @@
   >
   {@render children?.()}
 </List>
+
+<Hint 
+  text="↓" {context}
+  keys={inputMapping.keys_next}
+  buttons={inputMapping.buttons_next}
+  style={'left: 50%;'}
+  />
 </div>
