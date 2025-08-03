@@ -73,7 +73,7 @@
   }
 
   const _changeFocus = (direction: 1 | -1) => {
-    const focussed = lst.getFocusedItemIndex();
+    const focussed = lst.getFocusedItemIndex() || 0;
     let next = focussed+direction;
     if (wrapFocus && next < 0) {
       lst.focusItemAtIndex(getListChildren().length-1);
@@ -86,7 +86,7 @@
   }
 
   const _onpressed = () => {
-    selectedIndex = lst.getFocusedItemIndex();
+    selectedIndex = lst.getFocusedItemIndex() || 0;
     if (onpressed) {
       onpressed();
     }
