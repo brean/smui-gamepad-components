@@ -10,7 +10,8 @@
     VirtualButton, 
     Joystick, 
     component_state, 
-    Icon} from 'svelte-gamepad-virtual-joystick';
+    Icon,
+    focusPreviousElement} from 'svelte-gamepad-virtual-joystick';
 
   import Drawer, {
     AppContent,
@@ -27,6 +28,7 @@
   import Tab, { Label as TabLabel } from '@smui/tab';
   import Paper, { Content as PaperContent } from '@smui/paper';
   import { onMount } from 'svelte';
+  import Slider from '$lib/components/Slider.svelte';
 
   let activeBar = $state('First');
 
@@ -105,7 +107,7 @@
 
   let selectionIndex = $state(0);
   let active = $state(options[0]);
-  let settingsDialog = $state(false);
+  let settingsDialog: any = $state(false);
   let navList: List;
   let hintInfo: Snackbar;
 
@@ -250,6 +252,14 @@ just click/touch this button to toggle the drawer.<br />
 >
     Toggle drawer<br />
 </Button>
+<div style:width="300px">
+<Slider step={10} value={60}>
+</Slider>
+</div>
+<div style:width="300px">
+<Slider step={10} value={60} onpressed={() => {focusPreviousElement();}}>
+</Slider>
+</div>
 <br />
 
 </div>

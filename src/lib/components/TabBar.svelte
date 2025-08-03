@@ -38,8 +38,8 @@
       buttons: [GamepadButtons.DOWN],
       buttons_prev: [GamepadButtons.BUMPER_LEFT],
       buttons_next: [GamepadButtons.BUMPER_RIGHT],
-      keys_prev: ['a'],
-      keys_next: ['d'],
+      keys_prev: ['y'],
+      keys_next: ['x'],
       keys: ['enter', 'r']  // activate
     },
     context=['default'],
