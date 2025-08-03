@@ -7,7 +7,7 @@
     component_state,
     Hint
   } from "svelte-gamepad-virtual-joystick";
-  import { onMount, tick, type Snippet } from "svelte";
+  import { tick, type Snippet } from "svelte";
   import List from "@smui/list";
 
   let wrapper:HTMLElement;
@@ -59,24 +59,26 @@
     consumePress=false
   }: Props = $props();
 
-  let lst:List;
+  let lst:List | undefined = $state();
 
   export function focus() {
     tick().then(() => {
+      if (!lst) return;
       lst.getElement().focus();
     });
   }
 
-  const getListChildren = () => {
+  const getListChildren = (list: List) => {
     // FIXME: filter out all non-SMUI-Elements
-    return lst.getElement().children
+    return list.getElement().children
   }
 
   const _changeFocus = (direction: 1 | -1) => {
+    if (!lst) return;
     const focussed = lst.getFocusedItemIndex() || 0;
     let next = focussed+direction;
     if (wrapFocus && next < 0) {
-      lst.focusItemAtIndex(getListChildren().length-1);
+      lst.focusItemAtIndex(getListChildren(lst).length-1);
       return
     }
     lst.focusItemAtIndex(next);
@@ -86,14 +88,17 @@
   }
 
   const _onpressed = () => {
-    selectedIndex = lst.getFocusedItemIndex() || 0;
+    if (lst) {
+      selectedIndex = lst.getFocusedItemIndex() || 0;
+    }
     if (onpressed) {
       onpressed();
     }
     return true;
   }
   let lstInputComponent: PrevNextInputComponent;
-  onMount(() => {
+  $effect(() => {
+    if (!lst || lstInputComponent) return
     lstInputComponent = new PrevNextInputComponent(
       inputMapping, _changeFocus,
       lst.getElement(), requiresFocus, 
@@ -102,7 +107,7 @@
     return () => {
       unregisterComponent(context, lstInputComponent);
     }
-  });
+  })
 </script>
 
 <div 
