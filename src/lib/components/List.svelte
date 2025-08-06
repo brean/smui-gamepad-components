@@ -7,7 +7,7 @@
     component_state,
     Hint
   } from "svelte-gamepad-virtual-joystick";
-  import { tick, type Snippet } from "svelte";
+  import { onMount, tick, type Snippet } from "svelte";
   import List from "@smui/list";
 
   let wrapper:HTMLElement;
@@ -59,7 +59,7 @@
     consumePress=false
   }: Props = $props();
 
-  let lst:List | undefined = $state();
+  let lst:List;
 
   export function focus() {
     tick().then(() => {
@@ -97,8 +97,7 @@
     return true;
   }
   let lstInputComponent: PrevNextInputComponent;
-  $effect(() => {
-    if (!lst || lstInputComponent) return
+  onMount(() => {
     lstInputComponent = new PrevNextInputComponent(
       inputMapping, _changeFocus,
       lst.getElement(), requiresFocus, 
