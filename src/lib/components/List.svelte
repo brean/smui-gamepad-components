@@ -4,8 +4,9 @@
     type PrevNextInput,
     PrevNextInputComponent,
     registerComponent, unregisterComponent,
+    Hint,
     component_state,
-    Hint
+    addActiveComponent
   } from "svelte-gamepad-virtual-joystick";
   import { onMount, tick, type Snippet } from "svelte";
   import List from "@smui/list";
@@ -113,7 +114,7 @@
   bind:this={wrapper}
   class="gamepad-list-wrapper"
   onfocusin={() => {
-    component_state.activeComponents.push(lstInputComponent);
+    addActiveComponent(lstInputComponent);
   }}
   onfocusout={() => {
     if (component_state.activeComponents.includes(lstInputComponent)) {
