@@ -1,3 +1,6 @@
+# 0.0.11
+Allow FAB-Buttons to be extended
+
 # 0.0.10
 ## Bugfix 
 Add Floating Action Button.

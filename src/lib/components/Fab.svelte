@@ -14,6 +14,7 @@
   import Ripple from "@smui/ripple";
   
   interface Props {
+    extended?: boolean
     children?: Snippet
     disabled?: boolean
     onpressed?: () => void,
@@ -30,6 +31,7 @@
   }
 
   let {
+    extended = false,
     children = undefined,
     disabled = false,
     onpressed = undefined,  // only once when the pressed-state changes
@@ -95,6 +97,7 @@
 
 <div class={cssclassWrapper}>
 <Fab bind:this={fab}
+  {extended}
   {style}
   {disabled}
   class={cssclass}
