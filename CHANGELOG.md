@@ -1,3 +1,6 @@
+# 0.0.12
+Add IconButton
+
 # 0.0.11
 Allow FAB-Buttons to be extended
 

@@ -2,7 +2,7 @@
 	"name": "smui-gamepad-components",
 	"author": "Andreas Bresser <self@andreasbresser.de>",
 	"license": "BSD-3-Clause",
-	"version": "0.0.11",
+	"version": "0.0.12",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
@@ -46,6 +46,7 @@
 		"@smui/drawer": "^8.0.1",
 		"@smui/fab": "^8.0.1",
 		"@smui/form-field": "^8.0.1",
+		"@smui/icon-button": "^8.0.1",
 		"@smui/list": "^8.0.1",
 		"@smui/paper": "^8.0.1",
 		"@smui/slider": "^8.0.1",
