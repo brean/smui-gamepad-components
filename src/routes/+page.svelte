@@ -1,6 +1,6 @@
 <script lang="ts">
   import Button from '$lib/components/Button.svelte';
-  import { Label as ButtonLabel } from '@smui/button';
+  import { Label as ButtonLabel, Icon } from '@smui/button';
   import { 
     type ButtonInput, 
     type PrevNextInput, 
@@ -10,7 +10,6 @@
     VirtualButton, 
     Joystick, 
     component_state, 
-    Icon,
     focusPreviousElement} from 'svelte-gamepad-virtual-joystick';
 
   import Drawer, {
@@ -29,6 +28,7 @@
   import Paper, { Content as PaperContent } from '@smui/paper';
   import { onMount } from 'svelte';
   import Slider from '$lib/components/Slider.svelte';
+  import Fab from '$lib/components/Fab.svelte';
 
   let activeBar = $state('First');
 
@@ -178,6 +178,28 @@
 
 <div class="mdc-typography--body1">
 
+<Fab
+  inputMapping={toggleDrawerInput}
+  onpressed={() => {
+    open = !open;
+    if (open) {
+      navList.focus();
+    }
+    return false;
+  }}
+>
+  <Icon class="material-icons">menu</Icon>
+</Fab> &nbsp;
+
+Press <GamepadIcon type='ps4'
+            input={toggleDrawerInput.buttons[0]} />
+on {controller_index(toggleDrawerInput)},
+<GamepadIcon type='keyboard_mouse'
+      input={toggleDrawerInput.keys[0]} /> or
+just click/touch this button to toggle the drawer.<br />
+
+<br />
+
 Use 
 {#if [0, 1].includes(joystickMapping.axes_x) && [0, 1].includes(joystickMapping.axes_y) }
 <GamepadIcon 
@@ -231,27 +253,6 @@ just click/touch to press this button:<br />
     You pressed {presses} time{presses !== 1 ? 's' : ''}.<br />
 </Button><br />
 
-Press <GamepadIcon type='ps4'
-            input={toggleDrawerInput.buttons[0]} />
-on {controller_index(toggleDrawerInput)},
-<GamepadIcon type='keyboard_mouse'
-      input={toggleDrawerInput.keys[0]} /> or
-just click/touch this button to toggle the drawer.<br />
-
-<br />
-<Button
-  inputMapping={toggleDrawerInput}
-  variant="raised"
-  onpressed={() => {
-    open = !open;
-    if (open) {
-      navList.focus();
-    }
-    return false;
-  }}
->
-    Toggle drawer<br />
-</Button>
 <div style:width="300px">
 <Slider step={10} value={60}>
 </Slider>

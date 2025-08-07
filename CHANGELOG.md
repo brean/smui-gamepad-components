@@ -1,3 +1,7 @@
+# 0.0.10
+## Bugfix 
+Add Floating Action Button.
+
 # 0.0.9
 ## Bugfix 
 Update svelte-gamepad-virtual-joystick: Do not set navigator only on input event, use global window.navigator instead
