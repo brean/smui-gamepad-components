@@ -1,3 +1,11 @@
+# 0.0.9
+## Bugfix 
+Update svelte-gamepad-virtual-joystick: Do not set navigator only on input event, use global window.navigator instead
+
+# 0.0.8
+## Bugfix 
+Update svelte-gamepad-virtual-joystick: Stop update on onmount of InputManager
+
 # 0.0.7
 ## Bugfix 
 Update svelte-gamepad-virtual-joystick: When "requireFocus" is set we only handle the button/key events once. (fix in version 1.0.4 for svelte-gamepad-virtual-joystick)
