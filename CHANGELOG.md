@@ -1,3 +1,6 @@
+# 0.1.0
+Export focusItemAtIndex from List
+
 # 0.0.12
 Add IconButton
 

@@ -69,6 +69,13 @@
     });
   }
 
+  export function focusItemAtIndex(idx: number) {
+    tick().then(() => {
+      if (!lst) return;
+      lst.focusItemAtIndex(idx);
+    });
+  }
+
   const getListChildren = (list: List) => {
     // FIXME: filter out all non-SMUI-Elements
     return list.getElement().children
