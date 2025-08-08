@@ -1,3 +1,6 @@
+# 0.1.1
+Fix IconButton ripple effect
+
 # 0.1.0
 Export focusItemAtIndex from List
 

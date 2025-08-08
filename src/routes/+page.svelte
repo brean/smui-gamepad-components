@@ -29,6 +29,7 @@
   import { onMount } from 'svelte';
   import Slider from '$lib/components/Slider.svelte';
   import Fab from '$lib/components/Fab.svelte';
+    import IconButton from '$lib/components/IconButton.svelte';
 
   let activeBar = $state('First');
 
@@ -178,7 +179,7 @@
 
 <div class="mdc-typography--body1">
 
-<Fab
+<IconButton
   inputMapping={toggleDrawerInput}
   onpressed={() => {
     open = !open;
@@ -189,7 +190,7 @@
   }}
 >
   <Icon class="material-icons">menu</Icon>
-</Fab> &nbsp;
+</IconButton> &nbsp;
 
 Press <GamepadIcon type='ps4'
             input={toggleDrawerInput.buttons[0]} />
