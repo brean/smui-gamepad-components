@@ -1,3 +1,4 @@
+<!-- Floating Action Button -->
 <script lang="ts">
   import { 
     type ButtonInput,
@@ -13,6 +14,7 @@
   import Ripple from "@smui/ripple";
   
   interface Props {
+    extended?: boolean
     children?: Snippet
     disabled?: boolean
     onpressed?: () => void,
@@ -22,7 +24,6 @@
     style?: string,
     cssclass?: string
     color?: 'primary' | 'secondary'
-    variant?: 'text' | 'raised' | 'unelevated' | 'outlined'
     cssclassWrapper?: string,
     inputMapping?: ButtonInput
     context?: string[]
@@ -30,6 +31,7 @@
   }
 
   let {
+    extended = false,
     children = undefined,
     disabled = false,
     onpressed = undefined,  // only once when the pressed-state changes
@@ -39,7 +41,6 @@
 
     color = 'primary',
     cssclass = 'vbutton',
-    variant = 'text',
     style = '',
     inputMapping = {
       name: '',
@@ -57,8 +58,8 @@
 
   let ripple = $state(false);
 
-  let btn: IconButton;
-  let btnInputElement: ButtonInputComponent;
+  let iconBtn: IconButton;
+  let iconBtnInputElement: ButtonInputComponent;
   
   function _reripple() {
     // if the button is focussed _onpressed will be executed
@@ -69,10 +70,10 @@
   class SMUIButtonInputElement extends ButtonInputComponent {
     onpressed(): boolean {
       ripple = true;
-      if (!btn) return false;
-      btn.getElement().focus();
+      if (!iconBtn) return false;
+      iconBtn.getElement().focus();
       // this click executes onpressed
-      btn.getElement().click();
+      iconBtn.getElement().click();
       return false;
     }
 
@@ -83,19 +84,19 @@
   }
 
   onMount(() => {
-    btnInputElement = new SMUIButtonInputElement(
-      inputMapping, btn.getElement(), requiresFocus,
+    iconBtnInputElement = new SMUIButtonInputElement(
+      inputMapping, iconBtn.getElement(), requiresFocus,
       onpressed, onhold, onrelease);
-    registerComponent(context, btnInputElement);
+    registerComponent(context, iconBtnInputElement);
     return () => {
-      if (!btnInputElement) { return };
-      unregisterComponent(context, btnInputElement);
+      if (!iconBtnInputElement) { return };
+      unregisterComponent(context, iconBtnInputElement);
     }
   });
 </script>
 
 <div class={cssclassWrapper}>
-<IconButton bind:this={btn} 
+<IconButton bind:this={iconBtn}
   {style}
   {disabled}
   class={cssclass}
@@ -108,7 +109,7 @@
       Ripple,
       {
         active: ripple,
-        unbounded: false,
+        unbounded: true,
         color,
       },
     ]
