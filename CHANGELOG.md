@@ -1,3 +1,6 @@
+# 0.1.2
+Update svelte-gamepad-virtual-joystick: new DPad
+
 # 0.1.1
 Fix IconButton ripple effect
 
