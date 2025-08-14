@@ -2,7 +2,7 @@
 	"name": "smui-gamepad-components",
 	"author": "Andreas Bresser <self@andreasbresser.de>",
 	"license": "BSD-3-Clause",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run prepack",
@@ -65,7 +65,7 @@
 		"smui-theme": "^8.0.1",
 		"svelte": "^5.37.3",
 		"svelte-check": "^4.3.1",
-		"svelte-gamepad-virtual-joystick": "^1.0.8",
+		"svelte-gamepad-virtual-joystick": "^1.0.10",
 		"svelte-sequential-preprocessor": "^2.0.2",
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.20.0",

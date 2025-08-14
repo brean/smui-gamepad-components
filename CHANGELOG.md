@@ -1,3 +1,6 @@
+# 0.1.3
+Update svelte-gamepad-virtual-joystick: Hints for DPad
+
 # 0.1.2
 Update svelte-gamepad-virtual-joystick: new DPad
 
